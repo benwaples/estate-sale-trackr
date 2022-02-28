@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "alchemy-express-sql-ts": "^1.3.1"
+  }
+}
