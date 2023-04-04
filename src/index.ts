@@ -1,6 +1,7 @@
 import express, { Request, Response, Express } from 'express'
 import dotenv from 'dotenv';
 import scrape from './routes/scrape'
+import { checkAuth } from './handlers/auth';
 
 dotenv.config();
 
@@ -11,7 +12,9 @@ app.listen(port, () => {
 	console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
 });
 
-app.use('/scrape', scrape)
+app.use('/auth', scrape)
+
+app.use('/scrape', checkAuth, scrape)
 
 app.get('/', (req: Request, res: Response) => {
 	res.send('Express + TypeScript Server is running');
