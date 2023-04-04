@@ -12,5 +12,6 @@
         "tsconfigRootDir": "__dirname"
     },
     "rules": {
+        "semi": [1, "always"]
     }
 }
