@@ -12,13 +12,26 @@ export default class User {
 		this.password = row.password;
 	}
 
+	static async findByUsername(username: string) {
+		const { rows } = await pg.query(`
+		SELECT * FROM users WHERE username = $1
+		`, [username])
+		return rows[0]
+	}
+
 	static async signUp(username: string, password: string) {
+		// first check if username is taken, if it is just return error that its invalid as to not reveal any info
+		const exists = await this.findByUsername(username);
+		if (exists) throw new Error('unable to create user, try a new username');
+
 		const { rows } = await pg.query<User>(`
 		INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *
 		`, [username, bcrypt.hashSync(password, 8)]);
 
-		if (!rows[0]) throw new Error('unable to create user, try a new username');
-		return new User(rows[0]);
+
+		const user = rows[0]
+		if (!user) throw new Error('unable to create user, try a new username');
+		return new User(user);
 	}
 
 	static async signIn(username: string, password: string) {
@@ -27,7 +40,7 @@ export default class User {
 			`, [username])
 
 		const user = rows[0]
-		if (!user || bcrypt.compareSync(password, user.password)) {
+		if (!user || !bcrypt.compareSync(password, user.password)) {
 			// if no user, or incorrect password, return no found message as to not allude that a given username exists
 			throw new Error('user not found')
 		};

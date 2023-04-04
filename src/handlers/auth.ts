@@ -38,9 +38,8 @@ export async function signUp(req: ExpressRequest<{ username: string, password: s
 			username,
 			password
 		} = req.body
-		console.log('this is running')
+
 		if (!username || !password) {
-			console.log('this should be happpening')
 			return res.status(400).json({ message: 'missing username or password' })
 		}
 
@@ -54,6 +53,7 @@ export async function signUp(req: ExpressRequest<{ username: string, password: s
 }
 
 export async function signIn(req: Request, res: Response) {
+
 	try {
 		const {
 			username,
@@ -67,7 +67,8 @@ export async function signIn(req: Request, res: Response) {
 		const user = await User.signIn(username, password)
 
 		return res.send(profileAsToken(user))
-	} catch (e) {
-		res.status(500).send(e)
+	} catch (e: any) {
+		console.error(signUp.name, e.message)
+		res.status(500).send(e.message)
 	}
 }
