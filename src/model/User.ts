@@ -12,12 +12,12 @@ export default class User {
 		this.password = row.password;
 	}
 
-	static async signUp(user: User) {
+	static async signUp(username: string, password: string) {
 		const { rows } = await pg.query<User>(`
 		INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *
-		`, [user.username, bcrypt.hashSync(user.password, 8)]);
+		`, [username, bcrypt.hashSync(password, 8)]);
 
-		if (!rows[0]) return null;
+		if (!rows[0]) throw new Error('unable to create user, try a new username');
 		return new User(rows[0]);
 	}
 

@@ -1,6 +1,7 @@
 import express, { Request, Response, Express } from 'express'
 import dotenv from 'dotenv';
 import scrape from './routes/scrape'
+import auth from './routes/auth'
 import { checkAuth } from './handlers/auth';
 
 dotenv.config();
@@ -12,8 +13,7 @@ app.listen(port, () => {
 	console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
 });
 
-app.use('/auth', scrape)
-
+app.use('/auth', auth)
 app.use('/scrape', checkAuth, scrape)
 
 app.get('/', (req: Request, res: Response) => {
