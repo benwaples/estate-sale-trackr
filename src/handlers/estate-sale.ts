@@ -29,6 +29,8 @@ export async function getSaleInfo(id: number) {
 	const document = await parseResponseBodyIntoDom(response)
 
 	const rows = document.querySelectorAll('.salelist .row')
+	const images = document.querySelectorAll('.salelist img')
+
 	const data: Dictionary = {}
 
 	rows.forEach(row => {
@@ -37,6 +39,18 @@ export async function getSaleInfo(id: number) {
 
 		if (title && description) {
 			data[title] = description
+		}
+	})
+
+	images.forEach(image => {
+		const source = image.attributes.getNamedItem('src')?.textContent
+		if (!source) return;
+
+		const fullSource = 'https://www.estatesale-finder.com/' + source
+		if (!data.images) {
+			return data.images = [fullSource]
+		} else {
+			data.images.push(fullSource)
 		}
 	})
 
