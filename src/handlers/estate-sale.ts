@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import fetch from 'node-fetch';
-import { parseResponseBodyIntoDom } from "../utils/utils";
+import { parseResponseBodyIntoDom, removeTabsAndNewLines } from "../utils/utils";
 import { Dictionary, ExpressRequest } from "../types";
 
 
@@ -32,11 +32,11 @@ export async function getSaleInfo(id: number) {
 	const data: Dictionary = {}
 
 	rows.forEach(row => {
-		if (row.childNodes.length < 2) return;
+		const title = removeTabsAndNewLines(row.querySelector('.small-3')?.textContent ?? '')
+		const description = removeTabsAndNewLines(row.querySelector('.small-9')?.textContent ?? '')
 
-		const [, rawTitle, rawDescription] = row.childNodes;
-		if (rawTitle.textContent && rawDescription.textContent) {
-			data[rawTitle.textContent] = rawDescription.textContent
+		if (title && description) {
+			data[title] = description
 		}
 	})
 
