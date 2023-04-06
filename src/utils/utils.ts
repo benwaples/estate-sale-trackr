@@ -78,3 +78,13 @@ export function parseSaleDateString(x: string | undefined) {
 		dayAndTime
 	}
 }
+
+export function parseSaleAddress(x: string | undefined) {
+	if (!x) return null;
+
+	const [address, region] = x.split('   ').filter(el => !!el.trim())
+
+	if (address.toLocaleLowerCase().includes('tba')) return `Not Posted - ${region.trim()}`;
+
+	return address.trim();
+}

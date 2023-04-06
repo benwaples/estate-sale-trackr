@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import fetch from 'node-fetch';
-import { parseSaleDateString, parseResponseBodyIntoDom, removeTabsAndNewLines } from "../utils/utils";
+import { parseSaleDateString, parseResponseBodyIntoDom, removeTabsAndNewLines, parseSaleAddress } from "../utils/utils";
 import { Dictionary, ExpressRequest } from "../types";
 
 
@@ -41,6 +41,10 @@ export async function getSaleInfo(id: number) {
 			if (title === 'Dates') {
 				return data[title] = parseSaleDateString(description)
 			}
+			if (title === 'Address') {
+				return data[title] = parseSaleAddress(description)
+			}
+
 			data[title] = description
 
 		}
