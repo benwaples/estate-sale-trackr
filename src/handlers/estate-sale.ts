@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import fetch from 'node-fetch';
 import { parseSaleDateString, parseResponseBodyIntoDom, removeTabsAndNewLines, parseSaleAddress } from "../utils/utils";
 import { Dictionary, ExpressRequest } from "../types";
+import User from "../model/User";
 
 
 export async function allUpcomingSalesIds() {
@@ -66,9 +67,30 @@ export async function getSaleInfo(id: number) {
 }
 
 export async function allUpcomingSales(req: ExpressRequest, res: Response) {
-	const saleIds = await allUpcomingSalesIds();
 
-	const saleInfo = await Promise.all(saleIds.map(id => getSaleInfo(id)))
+	try {
 
-	res.send(saleInfo)
+		const saleIds = await allUpcomingSalesIds();
+
+		const saleInfo = await Promise.all(saleIds.map(id => getSaleInfo(id)))
+
+		res.send(saleInfo)
+	} catch (e: any) {
+		console.error(allUpcomingSales.name, e.message)
+		res.status(500).send(e.message)
+	}
+}
+
+export async function addFavoriteSale(req: ExpressRequest<{ saleId: number }>, res: Response) {
+	const { saleId } = req.body;
+
+	if (!req.user?.id) return res.sendStatus(401)
+
+	try {
+		await User.addFavoriteSale(req.user.id, saleId);
+		return res.sendStatus(200)
+	} catch (e: any) {
+		console.error(addFavoriteSale.name, e.message)
+		res.status(500).send(e.message)
+	}
 }

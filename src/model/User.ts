@@ -47,4 +47,15 @@ export default class User {
 
 		return new User(user)
 	}
+
+	static async addFavoriteSale(userId: number, saleId: number) {
+		const { rows } = await pg.query<User>(`
+		UPDATE users
+		SET saved_sales = array_append(, $1)
+		WHERE id = $2
+		RETURNING *
+		`, [saleId, userId])
+
+		if (!rows[0]) throw new Error('unable to add to saved sales')
+	}
 }
