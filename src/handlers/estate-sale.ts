@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import fetch from 'node-fetch';
-import { parseResponseBodyIntoDom, removeTabsAndNewLines } from "../utils/utils";
+import { parseSaleDateString, parseResponseBodyIntoDom, removeTabsAndNewLines } from "../utils/utils";
 import { Dictionary, ExpressRequest } from "../types";
 
 
@@ -38,7 +38,11 @@ export async function getSaleInfo(id: number) {
 		const description = removeTabsAndNewLines(row.querySelector('.small-9')?.textContent ?? '')
 
 		if (title && description) {
+			if (title === 'Dates') {
+				return data[title] = parseSaleDateString(description)
+			}
 			data[title] = description
+
 		}
 	})
 
