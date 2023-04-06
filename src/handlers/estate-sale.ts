@@ -31,7 +31,7 @@ export async function getSaleInfo(id: number) {
 	const rows = document.querySelectorAll('.salelist .row')
 	const images = document.querySelectorAll('.salelist img')
 
-	const data: Dictionary = {}
+	const data: Dictionary = { id }
 
 	rows.forEach(row => {
 		const title = removeTabsAndNewLines(row.querySelector('.small-3')?.textContent ?? '')
