@@ -55,7 +55,7 @@ export async function getSaleInfo(id: number) {
 		const source = image.attributes.getNamedItem('src')?.textContent
 		if (!source) return;
 
-		const fullSource = 'https://www.estatesale-finder.com/' + source
+		const fullSource = `https://www.estatesale-finder.com/${source}`
 		if (!data.images) {
 			return data.images = [fullSource]
 		} else {
